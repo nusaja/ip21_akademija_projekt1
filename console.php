@@ -1,15 +1,12 @@
 <?php
 
-echo "Hello world \n\n";
 
 if (empty($argv[1])) {
     ListAllBreeds();
-} else {
+} elseif (is_string($argv[1]) && ctype_alpha($argv[1]) && strlen($argv[1]) < 100) {
     SearchBreeds($argv);
 }
-
-//$search = $argv[1]; 
-
+  
 function ListAllBreeds() {
     
     $api_url = 'https://api.thedogapi.com/v1/breeds';
@@ -19,7 +16,7 @@ function ListAllBreeds() {
     for ($i = 0; $i < count($array); $i++) {
         echo $array[$i]['name'] . "\n"; 
     }
-    
+
 }
 
 function SearchBreeds($argv) {
