@@ -1,9 +1,9 @@
 <?php
 
 
-if (empty($argv[1])) {
+if ($argv[1] === "list" && sizeof($argv) === 2) {
     ListAllBreeds();
-} elseif (is_string($argv[1]) && ctype_alpha($argv[1]) && strlen($argv[1]) < 100) {
+} elseif ($argv[1] === "search" && is_string($argv[2]) && ctype_alpha($argv[2]) && strlen($argv[2]) < 100) {
     SearchBreeds($argv);
 }
   
@@ -33,7 +33,7 @@ function ListAllBreeds() {
 function SearchBreeds($argv) {
 
     global $argv; 
-    $api_url_search = 'https://api.thedogapi.com/v1/breeds/search?q=' . $argv[1];
+    $api_url_search = 'https://api.thedogapi.com/v1/breeds/search?q=' . $argv[2];
     $json_data = file_get_contents($api_url_search);
     $array_search = json_decode($json_data, true);
 
