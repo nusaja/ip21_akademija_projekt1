@@ -1,60 +1,67 @@
 <?php
 
+$type = $argv[2] ?? null;
+$query = $argv[3] ?? null;
 
-if ($argv[1] === "list" && sizeof($argv) === 3) {
-    ListAllBreeds($argv);
-} elseif ($argv[1] === "search" && is_string($argv[3]) && ctype_alpha($argv[3]) && strlen($argv[3]) < 100) {
-    SearchBreeds($argv);
+switch ($argv[1]) {
+    case "list":
+        if (empty($type) || !$type === "dog" || !$type === "cat") {
+            echo "Error: after list type in either dog or cat.\n";
+            die;
+        }
+        listAllBreeds($type);
+        break;
+    case "search":
+        if (!is_string($query) || !ctype_alpha($query) || strlen($query) > 100) {
+            echo "Error: breed name must have from 1-100 alphabetical characters.\n";
+            die;
+        }
+        searchBreeds($type, $query);
+        break;
+    default:
+        echo "Please type in: php console.php [list/search] [optional: dog/cat] [optional: breed name]\n";
+        break;
 }
-  
-function ListAllBreeds($argv) {
-    
-    if ($argv[2] === "dogs") {
-        $api_url = 'https://api.thedogapi.com/v1/breeds';
-    } elseif ($argv[2] === "cats") {
-        $api_url = 'https://api.thecatapi.com/v1/breeds';
-    }
-    
-    $json_data = @file_get_contents($api_url);
+
+function listAllBreeds($type) {
+    $path = 'breeds';
+    $list = callApi($type, $path);
+    printList($list);
+}
+
+function searchBreeds($type, $query) {
+   $path = 'breeds/search?q=' . $query;
+   $list = callApi($type, $path);
+   printList($list);
+}
+
+function callApi($type, $path) {
+
+    $fullPath = 'https://api.the' . $type . 'api.com/v1/' . $path;
+    $json_data = @file_get_contents($fullPath);
 
     if ($json_data === FALSE) { 
         echo "Error cought.\n";
         die;
     } 
 
-    $array = json_decode($json_data, true);
+    $list = json_decode($json_data, true);
 
-    if ($array === null) {
+    if ($list === null) {
         echo "Json cannot be decoded.\n";
         die;
     }
- 
-    for ($i = 0; $i < count($array); $i++) {
-        echo $array[$i]['name'] . "\n"; 
-    }
 
-}
-
-function SearchBreeds($argv) {
-
-    if ($argv[2] === "dogs") {
-        $api_url_search = 'https://api.thedogapi.com/v1/breeds/search?q=' . $argv[3];
-    } elseif ($argv[2] === "cats") {
-        $api_url_search = 'https://api.thecatapi.com/v1/breeds/search?q=' . $argv[3];
-    }
-
-    $json_data = file_get_contents($api_url_search);
-    $array_search = json_decode($json_data, true);
-
-    if (sizeof($array_search) === 0) {
+    if (sizeof($list) === 0) {
         echo "No such breed.\n";
         die;
     }
-    
-    for ($i = 0; $i < count($array_search); $i++) {
-        echo $array_search[$i]['name'] . "\n"; 
-    }
 
+    return $list;
 }
 
-
+function printList($list) {
+    for ($i = 0; $i < count($list); $i++) {
+        echo $list[$i]['name'] . "\n"; 
+    }
+}
