@@ -5,8 +5,8 @@ $query = $argv[3] ?? null;
 
 switch ($argv[1]) {
     case "list":
-        if (empty($type) || !$type === "dog" || !$type === "cat") {
-            echo "Error: after list type in either dog or cat.\n";
+        if (empty($type) || !$type === "dog" || !$type === "cat" || !$type === "both") {
+            echo "Error: after list type in either dog, cat or both.\n";
             die;
         }
         listAllBreeds($type);
@@ -19,12 +19,21 @@ switch ($argv[1]) {
         searchBreeds($type, $query);
         break;
     default:
-        echo "Please type in: php console.php [list/search] [optional: dog/cat] [optional: breed name]\n";
+        echo "Please type in: php console.php [list/search] [optional: dog/cat] [optional: breed name if you chose dog/cat]\n";
         break;
 }
 
 function listAllBreeds($type) {
     $path = 'breeds';
+
+    if ($type === "both") {
+        $list = callApi("dog", $path);
+        printList($list);
+        $list = callApi("cat", $path);
+        printList($list);
+        die;
+    }
+    
     $list = callApi($type, $path);
     printList($list);
 }
