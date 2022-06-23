@@ -19,7 +19,7 @@ switch ($argv[1]) {
         searchBreeds($type, $query);
         break;
     default:
-        echo "Please type in: php console.php [list/search] [optional: dog/cat] [optional: breed name if you chose dog/cat]\n";
+        echo "Please type in: php console.php [list/search] [optional: dog/cat/both] [optional: breed name if you chose dog/cat]\n";
         break;
 }
 
@@ -27,10 +27,27 @@ function listAllBreeds($type) {
     $path = 'breeds';
 
     if ($type === "both") {
-        $list = callApi("dog", $path);
-        printList($list);
-        $list = callApi("cat", $path);
-        printList($list);
+        $listDog = callApi("dog", $path);
+        $keyListDog = [];
+
+        for ($i=0; $i<count($listDog); $i++) {
+            $keyListDog[$listDog[$i]['name']] = "d";
+        }
+
+        $listCat = callApi("cat", $path);
+        $keyListCat = [];
+
+        for ($i=0; $i<count($listCat); $i++) {
+            $keyListCat[$listCat[$i]['name']] = "c";
+        }
+
+        $list = array_merge($keyListDog, $keyListCat);
+        ksort($list);
+
+        foreach ($list as $key => $value) {
+            echo "($value) $key\n"; 
+        }
+    
         die;
     }
     
@@ -70,6 +87,9 @@ function callApi($type, $path) {
 }
 
 function printList($list) {
+
+
+
     for ($i = 0; $i < count($list); $i++) {
         echo $list[$i]['name'] . "\n"; 
     }
