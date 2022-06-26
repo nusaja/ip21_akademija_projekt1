@@ -1,13 +1,14 @@
 <?php
 
 require_once 'lib/model.php';
+require_once 'views/consoleView.php';
 
 $argv2arr = ["dog", "cat", "both"];
 $type = $argv[2] ?? null;
 $query = $argv[3] ?? null;
 
 if (isset($argv[1]) && (empty($type) || !in_array($type, $argv2arr))) {
-    echo "Error: after list/search type in either dog, cat or both.\n";
+    echo "Please type in: php console.php list [dog/cat/both] OR search [dog/cat/both] [breed name].\n";
     die;
 }
 
@@ -25,6 +26,6 @@ switch ($argv[1]) {
         printList($list);
         break;
     default:
-        echo "Please type in: php console.php [list] [dog/cat/both] OR [search] [dog/cat/both] [breed name].\n";
+        echo "Please type in: php console.php list [dog/cat/both] OR search [dog/cat/both] [breed name].\n";
         break;
 }
