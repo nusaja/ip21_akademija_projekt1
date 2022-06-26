@@ -1,96 +1,41 @@
 <?php
 
+require_once 'lib/model.php';
+
+$argv2arr = ["dog", "cat", "both"];
 $type = $argv[2] ?? null;
 $query = $argv[3] ?? null;
 
+if (isset($argv[1]) && (empty($type) || !in_array($type, $argv2arr))) {
+    echo "Error: after list/search type in either dog, cat or both.\n";
+    die;
+}
+
 switch ($argv[1]) {
     case "list":
-        if (empty($type) || !$type === "dog" || !$type === "cat" || !$type === "both") {
-            echo "Error: after list type in either dog, cat or both.\n";
-            die;
-        }
-        listAllBreeds($type);
+        $list = listAllBreeds($type);
+        printList($list);
         break;
     case "search":
         if (!is_string($query) || !ctype_alpha($query) || strlen($query) > 100) {
             echo "Error: breed name must have from 1-100 alphabetical characters.\n";
             die;
-        }
-        searchBreeds($type, $query);
+        } 
+        $list = searchBreeds($type, $query);
+        printList($list);
         break;
     default:
-        echo "Please type in: php console.php [list/search] [optional: dog/cat/both] [optional: breed name if you chose dog/cat]\n";
+        echo "Please type in: php console.php [list/search] [optional: dog/cat/both] [optional: breed name]\n";
         break;
 }
 
-function listAllBreeds($type) {
-    $path = 'breeds';
-
-    if ($type === "both") {
-        $listDog = callApi("dog", $path);
-        $keyListDog = [];
-
-        for ($i=0; $i<count($listDog); $i++) {
-            $keyListDog[$listDog[$i]['name']] = "d";
-        }
-
-        $listCat = callApi("cat", $path);
-        $keyListCat = [];
-
-        for ($i=0; $i<count($listCat); $i++) {
-            $keyListCat[$listCat[$i]['name']] = "c";
-        }
-
-        $list = array_merge($keyListDog, $keyListCat);
-        ksort($list);
-
-        foreach ($list as $key => $value) {
-            echo "($value) $key\n"; 
-        }
+function printList(array $list) {
     
-        die;
-    }
-    
-    $list = callApi($type, $path);
-    printList($list);
-}
-
-function searchBreeds($type, $query) {
-   $path = 'breeds/search?q=' . $query;
-   $list = callApi($type, $path);
-   printList($list);
-}
-
-function callApi($type, $path) {
-
-    $fullPath = 'https://api.the' . $type . 'api.com/v1/' . $path;
-    $json_data = @file_get_contents($fullPath);
-
-    if ($json_data === FALSE) { 
-        echo "Error cought.\n";
-        die;
-    } 
-
-    $list = json_decode($json_data, true);
-
-    if ($list === null) {
-        echo "Json cannot be decoded.\n";
-        die;
+    if (empty($list)) {
+        echo "No results found.\n";
     }
 
-    if (sizeof($list) === 0) {
-        echo "No such breed.\n";
-        die;
-    }
-
-    return $list;
-}
-
-function printList($list) {
-
-
-
-    for ($i = 0; $i < count($list); $i++) {
-        echo $list[$i]['name'] . "\n"; 
+    foreach($list as $line) {
+        echo $line . PHP_EOL;
     }
 }
