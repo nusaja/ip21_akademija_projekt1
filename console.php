@@ -25,17 +25,6 @@ switch ($argv[1]) {
         printList($list);
         break;
     default:
-        echo "Please type in: php console.php [list/search] [optional: dog/cat/both] [optional: breed name]\n";
+        echo "Please type in: php console.php [list] [dog/cat/both] OR [search] [dog/cat/both] [breed name].\n";
         break;
-}
-
-function printList(array $list) {
-    
-    if (empty($list)) {
-        echo "No results found.\n";
-    }
-
-    foreach($list as $line) {
-        echo $line . PHP_EOL;
-    }
 }
