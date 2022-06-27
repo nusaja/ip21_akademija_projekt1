@@ -1,7 +1,5 @@
 <?php
 
-require_once 'views/consoleView.php';
-
 function printList(array $list) {
     
     if (empty($list)) {

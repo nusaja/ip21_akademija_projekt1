@@ -3,7 +3,7 @@
 require_once 'lib/model.php';
 require_once 'views/consoleView.php';
 
-$argv2arr = ["dog", "cat", "both"];
+$allowedTypes = ["dog", "cat", "both"];
 $type = $argv[2] ?? null;
 $query = $argv[3] ?? null;
 

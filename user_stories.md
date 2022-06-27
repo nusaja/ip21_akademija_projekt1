@@ -76,6 +76,10 @@ Then I get a message "Please type in: php console.php list [dog/cat/both] OR sea
 When I type in "search", [dog/cat/both] and [breed name] in the wrong order
 Then I get a message "Please type in: php console.php list [dog/cat/both] OR search [dog/cat/both] [breed name].\n"
 ```
+```gherkin
+When I type in only [dog/cat/both]
+Then I get a message "Please type in: php console.php list [dog/cat/both] OR search [dog/cat/both] [breed name].\n"
+```
 
 ### Absurd 
 
@@ -87,7 +91,6 @@ Then I get a message "Error: breed name must have from 1-100 alphabetical charac
 When I type in [breed name] that is contains characters than are not alphabetical
 Then I get a message "Error: breed name must have from 1-100 alphabetical characters."
 ```
-
 
 ### Resources
 
