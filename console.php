@@ -3,6 +3,7 @@
 require_once 'lib/model.php';
 require_once 'views/consoleView.php';
 $view = new ConsoleView();
+$model = new Model();
 
 $allowedTypes = ["dog", "cat", "both"];
 $type = $argv[2] ?? null;
@@ -15,7 +16,7 @@ if (isset($argv[1]) && (empty($type) || !in_array($type, $argv2arr))) {
 
 switch ($argv[1]) {
     case "list":
-        $list = listAllBreeds($type);
+        $list = $model->listAllBreeds($type);
         $view->showList($list);
         break;
     case "search":
@@ -23,7 +24,7 @@ switch ($argv[1]) {
             echo "Error: breed name must have from 1-100 alphabetical characters.\n";
             die;
         } 
-        $list = searchBreeds($type, $query);
+        $list = $model->searchBreeds($type, $query);
         $view->showList($list);
         break;
     default:

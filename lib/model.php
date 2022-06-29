@@ -1,98 +1,102 @@
 <?php
 
-function listAllBreeds($type) {
-    $path = 'breeds';
+class Model {
 
-    if ($type === "both") {
-        $listDog = callApi("dog", $path);
-        $keyListDog = [];
+    public function listAllBreeds($type) {
+        $path = 'breeds';
 
-        for ($i=0; $i<count($listDog); $i++) {
-            $keyListDog[$listDog[$i]['name']] = "d";
+        if ($type === "both") {
+            $listDog = $this->callApi("dog", $path);
+            $keyListDog = [];
+
+            for ($i=0; $i<count($listDog); $i++) {
+                $keyListDog[$listDog[$i]['name']] = "d";
+            }
+
+            $listCat = $this->callApi("cat", $path);
+            $keyListCat = [];
+
+            for ($i=0; $i<count($listCat); $i++) {
+                $keyListCat[$listCat[$i]['name']] = "c";
+            }
+
+            $list = array_merge($keyListDog, $keyListCat);
+            ksort($list);
+            
+            $toPrint = [];
+            foreach($list as $key => $value) {
+                $toPrint[] = "($value) " . $key;
+            }
+
+        } else {
+            $list = $this->callApi($type, $path);
+
+            $toPrint = [];
+            foreach($list as $line) {
+                $toPrint[] = $line['name'];
+            }
         }
-
-        $listCat = callApi("cat", $path);
-        $keyListCat = [];
-
-        for ($i=0; $i<count($listCat); $i++) {
-            $keyListCat[$listCat[$i]['name']] = "c";
-        }
-
-        $list = array_merge($keyListDog, $keyListCat);
-        ksort($list);
         
-        $toPrint = [];
-        foreach($list as $key => $value) {
-            $toPrint[] = "($value) " . $key;
-        }
-
-    } else {
-        $list = callApi($type, $path);
-
-        $toPrint = [];
-        foreach($list as $line) {
-            $toPrint[] = $line['name'];
-        }
-    }
-       
-    return $toPrint;
-}
-
-function searchBreeds($type, $query) {
-    $path = 'breeds/search?q=' . $query;
-
-    if ($type === "both") {
-        $listDog = callApi("dog", $path);
-        $keyListDog = [];
-
-        for ($i=0; $i<count($listDog); $i++) {
-            $keyListDog[$listDog[$i]['name']] = "d";
-        }
-
-        $listCat = callApi("cat", $path);
-        $keyListCat = [];
-
-        for ($i=0; $i<count($listCat); $i++) {
-            $keyListCat[$listCat[$i]['name']] = "c";
-        }
-
-        $list = array_merge($keyListDog, $keyListCat);
-        ksort($list);
-        
-        $toPrint = [];
-        foreach($list as $key => $value) {
-            $toPrint[] = "($value) " . $key;
-
-        }
-    } else {
-        $list = callApi($type, $path);
-
-        $toPrint = [];
-        foreach($list as $line) {
-            $toPrint[] = $line['name'];
-        }
+        return $toPrint;
     }
 
-    return $toPrint;
-}
+    public function searchBreeds($type, $query) {
+        $path = 'breeds/search?q=' . $query;
 
-function callApi($type, $path) {
+        if ($type === "both") {
+            $listDog = $this->callApi("dog", $path);
+            $keyListDog = [];
 
-    $fullPath = 'https://api.the' . $type . 'api.com/v1/' . $path;
+            for ($i=0; $i<count($listDog); $i++) {
+                $keyListDog[$listDog[$i]['name']] = "d";
+            }
 
-    $jsonData = @file_get_contents($fullPath);
+            $listCat = $this->callApi("cat", $path);
+            $keyListCat = [];
 
-    if ($jsonData === false) { 
-        echo "Error found.\n";
-        die;
-    } 
+            for ($i=0; $i<count($listCat); $i++) {
+                $keyListCat[$listCat[$i]['name']] = "c";
+            }
 
-    $list = json_decode($jsonData, true);
+            $list = array_merge($keyListDog, $keyListCat);
+            ksort($list);
+            
+            $toPrint = [];
+            foreach($list as $key => $value) {
+                $toPrint[] = "($value) " . $key;
 
-    if ($list === null) {
-        echo "Json cannot be decoded.\n";
-        die;
+            }
+        } else {
+            $list = $this->callApi($type, $path);
+
+            $toPrint = [];
+            foreach($list as $line) {
+                $toPrint[] = $line['name'];
+            }
+        }
+
+        return $toPrint;
     }
 
-    return $list;
+    private function callApi($type, $path) {
+
+        $fullPath = 'https://api.the' . $type . 'api.com/v1/' . $path;
+
+        $jsonData = @file_get_contents($fullPath);
+
+        if ($jsonData === false) { 
+            echo "Error found.\n";
+            die;
+        } 
+
+        $list = json_decode($jsonData, true);
+
+        if ($list === null) {
+            echo "Json cannot be decoded.\n";
+            die;
+        }
+
+        return $list;
+    }
+
 }
