@@ -2,6 +2,7 @@
 
 require_once 'lib/model.php';
 require_once 'views/consoleView.php';
+$view = new ConsoleView();
 
 $allowedTypes = ["dog", "cat", "both"];
 $type = $argv[2] ?? null;
@@ -15,7 +16,7 @@ if (isset($argv[1]) && (empty($type) || !in_array($type, $argv2arr))) {
 switch ($argv[1]) {
     case "list":
         $list = listAllBreeds($type);
-        printList($list);
+        $view->showList($list);
         break;
     case "search":
         if (!is_string($query) || !ctype_alpha($query) || strlen($query) > 100) {
@@ -23,7 +24,7 @@ switch ($argv[1]) {
             die;
         } 
         $list = searchBreeds($type, $query);
-        printList($list);
+        $view->showList($list);
         break;
     default:
         echo "Please type in: php console.php list [dog/cat/both] OR search [dog/cat/both] [breed name].\n";
