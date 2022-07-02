@@ -1,23 +1,29 @@
 <?php
 
+require_once './vendor/autoload.php';
+
 require_once 'lib/model.php';
-require_once 'views/consoleView.php';
-$view = new ConsoleView();
+
+$loader = new \Twig\Loader\FilesystemLoader('./views/templates');
+$twig = new \Twig\Environment($loader, [
+    'cache' => './cache',
+]);
+
 $model = new Model();
 
 $allowedTypes = ["dog", "cat", "both"];
 $type = $argv[2] ?? null;
 $query = $argv[3] ?? null;
 
-if (isset($argv[1]) && (empty($type) || !in_array($type, $argv2arr))) {
+if (isset($argv[1]) && (empty($type) || !in_array($type, $allowedTypes))) {
     echo "Please type in: php console.php list [dog/cat/both] OR search [dog/cat/both] [breed name].\n";
     die;
 }
 
 switch ($argv[1]) {
     case "list":
-        $list = $model->listAllBreeds($type);
-        $view->showList($list);
+        $list = $model->getListOfAllBreeds($type);
+        echo $twig->render('listOfBreeds.twig', ['listOfBreeds' => $list]);
         break;
     case "search":
         if (!is_string($query) || !ctype_alpha($query) || strlen($query) > 100) {
@@ -25,7 +31,7 @@ switch ($argv[1]) {
             die;
         } 
         $list = $model->searchBreeds($type, $query);
-        $view->showList($list);
+        echo $twig->render('listOfBreeds.twig', ['listOfBreeds' => $list]);
         break;
     default:
         echo "Please type in: php console.php list [dog/cat/both] OR search [dog/cat/both] [breed name].\n";

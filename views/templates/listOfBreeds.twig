@@ -1,0 +1,7 @@
+{% if listOfBreeds|length < 1 %}
+    No results found.
+{% else %}
+{% for entry in listOfBreeds %}
+ - {{ entry }}
+{% endfor %}
+{% endif %}

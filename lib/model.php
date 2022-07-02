@@ -2,7 +2,7 @@
 
 class Model {
 
-    public function listAllBreeds($type) {
+    public function getListOfAllBreeds($type): array {
         $path = 'breeds';
 
         if ($type === "both") {
