@@ -25,7 +25,10 @@ class Model {
             
             $toPrint = [];
             foreach($list as $key => $value) {
-                $toPrint[] = "($value) " . $key;
+                $toPrint[] = [
+                    'label' => $key,
+                    'type' => $value === "d" ? "dog" : "cat"
+                ];
             }
 
         } else {
@@ -33,10 +36,12 @@ class Model {
 
             $toPrint = [];
             foreach($list as $line) {
-                $toPrint[] = $line['name'];
-            }
+                $toPrint[] = [
+                    'label' => $line['name'],
+                    'type' => $type
+                ];
+           }
         }
-        
         return $toPrint;
     }
 
@@ -73,7 +78,10 @@ class Model {
 
             $toPrint = [];
             foreach($list as $line) {
-                $toPrint[] = $line['name'];
+                $toPrint[] = [
+                    'label' => $line['name'],
+                    'type' => $type
+                ];
             }
         }
 
