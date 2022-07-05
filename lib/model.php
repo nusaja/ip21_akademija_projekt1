@@ -63,8 +63,10 @@ class Model {
             
             $toPrint = [];
             foreach($list as $key => $value) {
-                $toPrint[] = "($value) " . $key;
-
+                $toPrint[] = [
+                    'label' => $key,
+                    'type' => $value === "d" ? "dog" : "cat"
+                ];
             }
         } else {
             $list = $this->callApi($type, $path);

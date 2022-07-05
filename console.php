@@ -6,8 +6,10 @@ require_once 'lib/model.php';
 
 $loader = new \Twig\Loader\FilesystemLoader('./views/templates');
 $twig = new \Twig\Environment($loader, [
-    'cache' => './cache',
+    //'cache' => './cache',
+    'debug' => true,
 ]);
+$twig->addExtension(new \Twig\Extension\DebugExtension());
 
 $model = new Model();
 
