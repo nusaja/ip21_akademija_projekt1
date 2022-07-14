@@ -1,11 +1,9 @@
 {% if listOfBreeds|length < 1 %}
     No results found.
 {% else %}
+
 {% for entry in listOfBreeds %} 
-{% if entry.type is same as 'dog' %}
-- {{ entry.label }} doggo 
-{% else %}
-- {{ entry.label }} puss
-{% endif %}
+- {{ entry.type|capitalize }}: {{ entry.label }}{% if isVerbose %} | Temperament: {{ entry.temperament }} {% if entry.type is same as 'dog' %}| Breed group: {{ entry.breed_group }} {% else %}| Origin: {{ entry.origin }} {% endif %} {% endif %}
 {% endfor %}
+
 {% endif %}

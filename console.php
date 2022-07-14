@@ -18,14 +18,20 @@ $type = $argv[2] ?? null;
 $query = $argv[3] ?? null;
 
 if (isset($argv[1]) && (empty($type) || !in_array($type, $allowedTypes))) {
-    echo "Please type in: php console.php list [dog/cat/both] OR search [dog/cat/both] [breed name].\n";
+    echo "Please type in: php console.php list [dog/cat/both] OR search [dog/cat/both] [breed name]. When using list function, you can type in [-v] to get additional information.\n";
     die;
+}
+
+if (($argv[$argc - 1] === "-v")) {
+    $isVerbose = true; 
+} else {
+    $isVerbose = false; 
 }
 
 switch ($argv[1]) {
     case "list":
         $list = $model->getListOfAllBreeds($type);
-        echo $twig->render('listOfBreeds.twig', ['listOfBreeds' => $list]);
+        echo $twig->render('listOfBreeds.twig', ['listOfBreeds' => $list, 'isVerbose' => $isVerbose]);
         break;
     case "search":
         if (!is_string($query) || !ctype_alpha($query) || strlen($query) > 100) {
@@ -33,7 +39,7 @@ switch ($argv[1]) {
             die;
         } 
         $list = $model->searchBreeds($type, $query);
-        echo $twig->render('listOfBreeds.twig', ['listOfBreeds' => $list]);
+        echo $twig->render('listOfBreeds.twig', ['listOfBreeds' => $list, 'isVerbose' => $isVerbose]);
         break;
     default:
         echo "Please type in: php console.php list [dog/cat/both] OR search [dog/cat/both] [breed name].\n";

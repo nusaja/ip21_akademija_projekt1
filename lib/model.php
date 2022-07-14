@@ -6,86 +6,74 @@ class Model {
         $path = 'breeds';
 
         if ($type === "both") {
-            $listDog = $this->callApi("dog", $path);
-            $keyListDog = [];
+           
+            return $this->prepareBothToPrint($path); 
 
-            for ($i=0; $i<count($listDog); $i++) {
-                $keyListDog[$listDog[$i]['name']] = "d";
-            }
-
-            $listCat = $this->callApi("cat", $path);
-            $keyListCat = [];
-
-            for ($i=0; $i<count($listCat); $i++) {
-                $keyListCat[$listCat[$i]['name']] = "c";
-            }
-
-            $list = array_merge($keyListDog, $keyListCat);
-            ksort($list);
-            
-            $toPrint = [];
-            foreach($list as $key => $value) {
-                $toPrint[] = [
-                    'label' => $key,
-                    'type' => $value === "d" ? "dog" : "cat"
-                ];
-            }
-
-        } else {
-            $list = $this->callApi($type, $path);
-
-            $toPrint = [];
-            foreach($list as $line) {
-                $toPrint[] = [
-                    'label' => $line['name'],
-                    'type' => $type
-                ];
-           }
         }
-        return $toPrint;
+
+        return $this->prepareToPrint($type, $path);
     }
 
     public function searchBreeds($type, $query) {
         $path = 'breeds/search?q=' . $query;
 
         if ($type === "both") {
-            $listDog = $this->callApi("dog", $path);
-            $keyListDog = [];
 
-            for ($i=0; $i<count($listDog); $i++) {
-                $keyListDog[$listDog[$i]['name']] = "d";
-            }
+           return $this->prepareBothToPrint($path); 
+    
+        }
+        
+        return $this->prepareToPrint($type, $path);
+    }
 
-            $listCat = $this->callApi("cat", $path);
-            $keyListCat = [];
+    private function extractDataForDogs($line) {
+        return [
+            'type' => 'dog',
+            'label' => $line['name'],
+            'breed_group' => $line['breed_group'] ?? null,
+            'temperament' => $line['temperament'] ?? null
+        ];
+    }
 
-            for ($i=0; $i<count($listCat); $i++) {
-                $keyListCat[$listCat[$i]['name']] = "c";
-            }
+    private function extractDataForCats($line) {
+        return [
+            'type' => 'cat',
+            'label' => $line['name'],
+            'origin' => $line['origin'] ?? null,
+            'temperament' => $line['temperament'] ?? null
+        ];
+    }
 
-            $list = array_merge($keyListDog, $keyListCat);
-            ksort($list);
-            
-            $toPrint = [];
-            foreach($list as $key => $value) {
-                $toPrint[] = [
-                    'label' => $key,
-                    'type' => $value === "d" ? "dog" : "cat"
-                ];
-            }
-        } else {
-            $list = $this->callApi($type, $path);
+    private function prepareBothToPrint($path) {
 
-            $toPrint = [];
-            foreach($list as $line) {
-                $toPrint[] = [
-                    'label' => $line['name'],
-                    'type' => $type
-                ];
-            }
+        $listDog = $this->callApi("dog", $path);
+        $toPrint = [];
+
+        foreach ($listDog as $line) {
+            $toPrint[$line['name']] = $this->extractDataForDogs($line);
+        }
+
+        $listCat = $this->callApi("cat", $path);
+
+        foreach ($listCat as $line) {
+            $toPrint[$line['name']] = $this->extractDataForCats($line);
+        }
+
+        ksort($toPrint);
+        return $toPrint;
+
+    }
+
+    private function prepareToPrint($type, $path) {
+
+        $list = $this->callApi($type, $path);
+        $toPrint = [];
+        foreach($list as $line) {
+            $toPrint[] = $type == 'dog' ? $this->extractDataForDogs($line) : $this->extractDataForCats($line);
         }
 
         return $toPrint;
+
     }
 
     private function callApi($type, $path) {
@@ -108,5 +96,4 @@ class Model {
 
         return $list;
     }
-
 }
