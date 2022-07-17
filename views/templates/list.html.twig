@@ -1,0 +1,24 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>My Webpage</title>
+</head>
+<body>
+    <ul id="breeds">
+    {% if listOfBreeds|length < 1 %}
+    No results found.
+{% else %}
+
+{% for entry in listOfBreeds %} 
+- {{ entry.type|capitalize }}: {{ entry.label }}{% if isVerbose %} | Temperament: {{ entry.temperament }} {% if entry.type is same as 'dog' %}| Breed group: {{ entry.breed_group }} {% else %}| Origin: {{ entry.origin }} {% endif %} {% endif %}
+{% endfor %}
+
+{% endif %}
+
+    </ul>
+</body>
+</html>
