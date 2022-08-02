@@ -1,0 +1,22 @@
+body {
+    background-color: lightblue;
+  }
+  
+  h1 {
+    font-family: verdana;
+    font-size: 50px;
+    display: table;
+    margin: 40px auto;
+  }
+
+  ul {
+    width: 600px;
+    display: table;
+    margin: 0 auto;
+    font-size: 20px;
+    font-family: verdana;
+  }
+
+  .breed-name {
+    font-weight: bold;
+  }

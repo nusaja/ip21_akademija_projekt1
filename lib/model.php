@@ -22,13 +22,13 @@ class Model {
            return $this->prepareBothToPrint($path); 
     
         }
-        
+
         return $this->prepareToPrint($type, $path);
     }
 
     private function extractDataForDogs($line) {
         return [
-            'type' => 'dog',
+            'type' => 'dog breed',
             'label' => $line['name'],
             'breed_group' => $line['breed_group'] ?? null,
             'temperament' => $line['temperament'] ?? null
@@ -37,7 +37,7 @@ class Model {
 
     private function extractDataForCats($line) {
         return [
-            'type' => 'cat',
+            'type' => 'cat breed',
             'label' => $line['name'],
             'origin' => $line['origin'] ?? null,
             'temperament' => $line['temperament'] ?? null
